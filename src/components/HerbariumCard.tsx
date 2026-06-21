@@ -5,9 +5,12 @@ import { PlantPreview } from "./PlantPreview";
 
 interface HerbariumCardProps {
   cards: HerbariumCardData[];
+  onLoadCard: (card: HerbariumCardData) => void;
+  onDeleteCard: (id: string) => void;
+  onClearCards: () => void;
 }
 
-export function HerbariumCard({ cards }: HerbariumCardProps) {
+export function HerbariumCard({ cards, onLoadCard, onDeleteCard, onClearCards }: HerbariumCardProps) {
   return (
     <section className="rounded-lg border border-archive-line bg-archive-label/90 p-5 shadow-specimen">
       <div className="mb-4 flex items-end justify-between gap-4 border-b border-archive-line pb-3">
@@ -15,7 +18,18 @@ export function HerbariumCard({ cards }: HerbariumCardProps) {
           <p className="text-xs uppercase tracking-[0.22em] text-archive-moss">My Herbarium Cards</p>
           <h2 className="mt-1 font-serif text-2xl text-archive-ink">我的植物图鉴卡片</h2>
         </div>
-        <span className="text-sm text-archive-ink/60">{cards.length} cards</span>
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-archive-ink/60">{cards.length} cards</span>
+          {cards.length > 0 && (
+            <button
+              type="button"
+              onClick={onClearCards}
+              className="rounded border border-archive-line bg-white/70 px-2.5 py-1 text-xs text-archive-ink/65 transition hover:border-archive-moss hover:text-archive-ink"
+            >
+              Clear
+            </button>
+          )}
+        </div>
       </div>
 
       {cards.length === 0 ? (
@@ -26,11 +40,16 @@ export function HerbariumCard({ cards }: HerbariumCardProps) {
         <div className="grid gap-4">
           {cards.map((card) => (
             <article key={card.id} className="grid gap-4 rounded-md border border-archive-line bg-white/70 p-4 md:grid-cols-[170px_1fr]">
-              <PlantPreview selectedFeatures={card.selectedFeatures} compact />
+              <PlantPreview selectedFeatures={card.selectedFeatures} imageUrl={card.imageUrl} compact />
               <div>
                 <div className="flex flex-wrap items-start justify-between gap-3">
-                  <h3 className="font-serif text-xl text-archive-ink">{card.name}</h3>
-                  <time className="rounded border border-archive-line bg-archive-label px-2 py-1 text-xs text-archive-ink/55">{card.savedAt}</time>
+                  <div>
+                    <h3 className="font-serif text-xl text-archive-ink">{card.name}</h3>
+                    <p className="mt-1 text-xs uppercase tracking-[0.16em] text-archive-moss">{card.specimenCode}</p>
+                  </div>
+                  <time dateTime={card.savedAtISO} className="rounded border border-archive-line bg-archive-label px-2 py-1 text-xs text-archive-ink/55">
+                    {card.savedAt}
+                  </time>
                 </div>
 
                 <div className="mt-3 flex flex-wrap gap-2">
@@ -46,6 +65,23 @@ export function HerbariumCard({ cards }: HerbariumCardProps) {
                 </div>
 
                 <p className="mt-4 line-clamp-3 text-sm leading-6 text-archive-ink/68">{card.explanation}</p>
+
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => onLoadCard(card)}
+                    className="rounded border border-archive-moss bg-archive-pale px-3 py-1.5 text-xs font-medium text-archive-ink transition hover:bg-[#dce8d0]"
+                  >
+                    Load This Card
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onDeleteCard(card.id)}
+                    className="rounded border border-archive-line bg-white/70 px-3 py-1.5 text-xs font-medium text-archive-ink/65 transition hover:border-[#b66a5e] hover:text-[#8d332c]"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
             </article>
           ))}

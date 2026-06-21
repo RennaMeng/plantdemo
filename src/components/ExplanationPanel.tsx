@@ -17,12 +17,15 @@ export function ExplanationPanel({ explanation, imagePrompt }: ExplanationPanelP
         <div className="mb-2 flex items-center justify-between gap-3">
           <h3 className="font-serif text-base text-archive-ink">Image Prompt</h3>
           <span className="rounded border border-archive-line bg-archive-label px-2 py-1 text-[11px] uppercase tracking-[0.16em] text-archive-moss">
-            Ready for API
+            Complete Plant Image
           </span>
         </div>
+        <p className="mb-2 text-xs leading-5 text-archive-ink/55">
+          影像模式：将当前形态组合转译为一张黑底、真实、科学且有艺术感的完整植物图，包含叶、花序、花色与果实特征。
+        </p>
         <p className="text-xs leading-6 text-archive-ink/68">{imagePrompt}</p>
         <p className="mt-3 text-xs leading-5 text-archive-ink/50">
-          TODO: Replace mock SVG preview with real image generation API call. This prompt can be sent to OpenAI Images API or Stable Diffusion.
+          TODO: Replace or tune the server-side image provider as needed. This preset currently asks Google Nano Banana 2 / Gemini Flash Image for a complete botanical specimen image.
         </p>
       </div>
     </section>

@@ -59,9 +59,42 @@ export function generatePlantExplanation(selectedFeatures: SelectedFeatures): st
 }
 
 export function generateImagePrompt(selectedFeatures: SelectedFeatures): string {
-  const promptParts = featureOrder.map((category) => getFeature(category, selectedFeatures[category]).promptWords);
+  const leafShape = getFeature("leafShape", selectedFeatures.leafShape);
+  const leafMargin = getFeature("leafMargin", selectedFeatures.leafMargin);
+  const phyllotaxis = getFeature("phyllotaxis", selectedFeatures.phyllotaxis);
+  const inflorescence = getFeature("inflorescence", selectedFeatures.inflorescence);
+  const flowerColor = getFeature("flowerColor", selectedFeatures.flowerColor);
+  const fruitType = getFeature("fruitType", selectedFeatures.fruitType);
 
-  return `Scientific botanical illustration of a herbaceous plant with ${promptParts.join(
-    ", ",
-  )}, clear leaf venation, educational diagram style, white background, labeled morphology.`;
+  return [
+    "Create a high-resolution scientific botanical specimen image of a complete plant, not a single leaf.",
+    "The plant must clearly include the selected leaf morphology, leaf arrangement, inflorescence, flower color, and fruit type in one coherent specimen.",
+    `Leaves: ${leafShape.promptWords}, ${leafMargin.promptWords}, visible midrib and fine vein network.`,
+    `Phyllotaxis: ${phyllotaxis.promptWords}, with leaves arranged accurately along the stem or base.`,
+    `Inflorescence and flowers: ${inflorescence.promptWords}, ${flowerColor.promptWords}, botanically plausible flowers.`,
+    `Fruit: ${fruitType.promptWords}, shown as a small but visible mature or developing fruit structure.`,
+    "Style: realistic botanical scanography and natural history museum specimen photography, scientific macro detail, elegant artful composition, not cartoon, not fantasy.",
+    "Composition: complete plant centered vertically, top-down specimen view, pressed-flat herbarium feeling, clean silhouette, full plant visible from root/base to flowers and fruit.",
+    "Background and light: pure black background (#000000), high-precision scanner light, even cool illumination, minimal shadow, razor-sharp plant edges.",
+    "Avoid: pot, soil, vase, hand, tools, insects, decorative labels, cluttered background, landscape scene, extra unrelated plants.",
+  ].join(" ");
+}
+
+export function createRandomSelectedFeatures(): SelectedFeatures {
+  return featureOrder.reduce((result, category) => {
+    const options = plantFeatures[category];
+    const randomFeature = options[Math.floor(Math.random() * options.length)];
+
+    return {
+      ...result,
+      [category]: randomFeature.id,
+    };
+  }, {} as SelectedFeatures);
+}
+
+export function generateSpecimenCode(selectedFeatures: SelectedFeatures, index: number): string {
+  const leafShape = getFeature("leafShape", selectedFeatures.leafShape).id.slice(0, 3).toUpperCase();
+  const flowerColor = getFeature("flowerColor", selectedFeatures.flowerColor).id.slice(0, 3).toUpperCase();
+
+  return `PMG-${flowerColor}-${leafShape}-${String(index + 1).padStart(3, "0")}`;
 }

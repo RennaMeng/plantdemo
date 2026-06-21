@@ -21,8 +21,11 @@ export type SelectedFeatures = Record<FeatureCategory, string>;
 export interface HerbariumCardData {
   id: string;
   name: string;
+  specimenCode: string;
   selectedFeatures: SelectedFeatures;
   explanation: string;
   imagePrompt: string;
+  imageUrl: string | null;
   savedAt: string;
+  savedAtISO: string;
 }
